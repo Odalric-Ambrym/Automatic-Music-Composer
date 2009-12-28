@@ -1,0 +1,65 @@
+(* Structural Abstraction *)
+
+class abstract_note duree valeur artic nuance= 
+object
+  val duree = duree
+  method duree = duree
+  val valeur = valeur
+  method valeur = valeur
+  val artic = artic
+  method artic = artic
+  val nuance = nuance
+  method nuance = nuance
+  method duree_reelle =
+   1. /. float_of_int(duree)
+  method toLily (gamme:gamme)  hauteur  =
+    let s_duree = string_of_int duree in 
+    let s_hauteur = hauteurToLily hauteur in
+    let s_nuance =  nuance_simpleToLily(nuance) in
+    let s_artic =  artic_simpleToLily(artic) in
+    let s_valeur = valeurToLily valeur gamme in
+      s_valeur^s_hauteur^s_duree^s_artic^s_nuance^" "
+end;;
+
+class abstract_groupe notes artic gamme hauteur nuance =
+object
+  val notes = notes
+  method notes = notes
+  val artic = artic
+  method artic = artic
+  val gamme = gamme
+  method gamme = gamme
+  val hauteur = hauteur
+  method hauteur = hauteur
+  val nuance = nuance
+  method nuance = nuance
+(*  val rythme = rythme
+  method rythme = rythme*)
+  method duree_reelle =
+   List.fold_left (+.) 0.
+   (List.map (function (x:abstract_note) -> x#duree_reelle) notes)
+  method nombre_de_notes =
+    List.length notes
+  method toLily =
+    let s_artic = artic_groupeToLily(artic) in
+    let s_nuance = nuance_groupeToLily(nuance) in
+    let s_fnote = (List.hd notes)#toLily gamme  hauteur in
+    let s_notes = List.fold_left (^) "" (List.map (function (x:abstract_note)-> x#toLily gamme hauteur) (List.tl notes)) in
+    s_fnote^(fst s_artic)^(fst s_nuance)^s_notes^(snd s_nuance)^(snd s_artic)^" "
+end;;
+
+
+class abstract_phrase groupes =
+object
+  val groupes = groupes
+  method groupes = groupes
+  method signature =
+   List.map (function (x:abstract_groupe) -> (x#duree_reelle,x#nombre_de_notes)) groupes  
+  method toLily =
+    List.fold_left (^) "" (List.map (function (x:abstract_groupe) -> x#toLily) groupes)
+end;;
+
+class abstract_score graphe =
+object
+  val graphe = graphe
+end;;

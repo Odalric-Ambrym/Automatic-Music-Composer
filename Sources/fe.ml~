@@ -1,0 +1,8 @@
+(* Functional Elements *)
+
+let grOctavia = hauteurMTogrM (fun x -> x+1);;
+let pOctavia = grMTopM grOctavia;;
+let grTodorien = gammesMTogrM gTodorien;;
+let pTodorien = grMTopM grTodorien;;
+
+let fDorien = gTodorien fMajeur;;

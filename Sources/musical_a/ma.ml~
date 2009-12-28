@@ -1,0 +1,326 @@
+(* Musical Abstraction *)
+
+(*Dod = Do diesis, Reb = Re bemolle*)
+type nota = C | Cd | Db | D | Dd | Eb | E | F | Fd | Gb | G | Gd | Ab |A |Ad |Bb |B;; 
+type accento = Dummy_accento | Tenuto| Corona;;
+type durata = Ronde | Blanche | Noire | Croche | DoubleCroche | TripleCroche;;
+type intensita = Dummy_intensita |  Piano |MezzoForte | Forte ;;
+type altezza = int;;
+type timbro = Dummy_timbro;; (* ??? *)
+type dinamica= Dummy_dinamica | Crescendo | Decrescendo ;;
+type espresione = Dummy_espresione | Legato | Marcato;;
+(* Question : nuances
+- Piano ? local/global
+- sfz : local
+- crescendo : global *)
+type ritmo = Binare | Ternare;;
+
+(* *********** *)
+let durataToLily d = match d with
+  |Ronde -> "1"
+  |Blanche -> "2"
+  |Noire -> "4"
+  |Croche -> "8"
+  |DoubleCroche -> "16"
+  |TripleCroche -> "32";;
+let rec altezzaToLily h =
+ match h with
+   |1 -> "'"
+   |_ -> "'"^(altezzaToLily (h-1));;
+let intensitaToLily n = match n with
+  | Piano -> "\\p"
+  | MezzoForte -> "\\mf"
+  | Forte -> "\\f"
+  | _ -> "";;
+
+let accentoToLily p = match p with
+  | Tenuto -> "--"
+  | _ -> "";;
+let notaToLily n = match n with
+  | C-> "c"
+  | Cd -> "cis" | Db -> "des"
+  | D-> "d" 
+  | Dd-> "dis" | Eb-> "ees"
+  | E-> "e" 
+  | F-> "f" 
+  | Fd-> "fis" | Gb-> "ges"
+  | G-> "g" 
+  | Gd-> "gis" | Ab-> "aes"
+  | A-> "a"
+  | Ad-> "ais" |Bb-> "bes"
+  | B-> "b";;
+
+let espresioneToLily  e = match e with
+  | Legato -> ("\\(","\\)")
+  | Marcato ->  ("","")
+  | _ -> ("","");;
+let dinamicaToLily  d = match d with
+  | Crescendo -> ("\\<","\\!")
+  | Decrescendo -> ("\\>","\\!")
+  | _ -> ("","");;
+
+
+(* *********** *)
+let durataToValue d = match d with
+  |Ronde -> 1
+  |Blanche -> 2
+  |Noire -> 4
+  |Croche -> 8
+  |DoubleCroche -> 16
+  |TripleCroche -> 32;;
+
+let notaToValue n =
+match n with
+  | C-> 0 
+  | Cd -> 1 | Db -> 1 
+  | D-> 2 
+  | Dd-> 3 | Eb-> 3 
+  | E-> 4 
+  | F-> 5 
+  | Fd-> 6 | Gb-> 6 
+  | G-> 7 
+  | Gd-> 8 | Ab-> 8 
+  | A-> 9
+  | Ad-> 10 |Bb->10 
+  | B-> 11
+;;
+
+let valueToNota v b =
+  if b then   match v with
+      | 0-> C 
+      | 1 -> Cd
+      | 2-> D 
+      | 3-> Dd 
+      | 4-> E 
+      | 5-> F 
+      | 6-> Fd 
+      | 7-> G 
+      | 8-> Gd 
+      | 9-> A
+      | 10-> Ad
+      | 11-> B
+  else
+    match v with
+      | 0 -> C
+      | 1 -> Db 
+      | 2-> D 
+      | 3-> Eb 
+      | 4-> E 
+      | 5-> F 
+      | 6-> Gb 
+      | 7-> G 
+      | 8-> Ab 
+      | 9-> A
+      | 10->Bb
+      | 11-> B
+;;
+
+(* *********** *)
+
+class scala fonda trois cinq sept neuf onze treize= 
+object
+  val i = fonda
+  method i = fonda
+  val iii = trois
+  method iii = trois
+  val v = cinq
+  method v = cinq
+  val vii = sept
+  method vii = sept
+  val ix = neuf
+  method ix = neuf
+  val xi = onze
+  method xi = onze
+  val xiii = treize
+  method xiii = treize
+  method signature = 
+   [iii,v,vii,ix,xi,xiii]
+  method norm =
+   abs(iii)+ abs(v) + abs(vii) + abs(ix) + abs(xi) + abs(xiii)
+  method expand =
+    let vF = notaToValue fonda in
+    let vII = vF + 2
+    and vIII = vF + 4 + iii 
+    and vIV = vF + 5 + xi
+    and vV = vF + 7 + v 
+    and vVI = vF + 9 + xiii
+    and vVII = vF + 11  + vii
+    and vVIII = vF
+    and vIX = vF + 2 + ix
+    and vX = vF + 4 + iii 
+    and vXI = vF + 5 + xi
+    and vXII = vF + 7 + v
+    and vXIII = vF + 9 + xiii 
+    and vXIV = vF + 11 + vii in
+      match fonda with
+	 |Cd | D | E | G |A |B ->
+	    List.map (function x ->  valueToNota (x mod 12) true) 
+	      [vF;vII;vIII;vIV;vV;vVI;vVII;vVIII;vIX;vX;vXI;vXII;vXIII;vXIV]
+	 |C |Db | Dd | Eb | F |Fd | Gb |Gd | Ab |Ad | Bb  ->
+	    List.map (function x ->  valueToNota (x mod 12) false) 
+	      [vF;vII;vIII;vIV;vV;vVI;vVII;vVIII;vIX;vX;vXI;vXII;vXIII;vXIV]
+end;;
+
+let rec search l e = 
+  match l with
+    | [] -> 0
+    | x::q -> if (x=e) then 1
+      else (1+ search q e);;
+
+let notaToValueScala nota (s:scala) =
+  (search (s#expand) nota);;
+
+
+
+
+
+(*
+
+type artic_simple= Dummy_as | Pique | Accentue | Tenu;;
+type artic_groupe = Dummy_ag | Lie;;
+type nuance_simple = Dummy_ns | Piano | MezzoForte | Forte;; 
+type nuance_groupe =  Dummy_ng | Crescendo | Decrescendo ;;
+type rythme = Binary | Ternary;;
+
+let nuance_simpleToLily n = match n with
+      | Dummy_ns -> ""
+      | Piano -> "\p"
+      | MezzoForte -> "\mf"
+      | Forte -> "\f";;
+let artic_simpleToLily p = match p with
+      | Dummy_as -> ""
+      | Pique -> "-."
+      | Accentue -> "->"
+      | Tenu -> "--";;
+let nuance_groupeToLily n = match n with
+      | Dummy_ng -> ("","")
+      | Crescendo -> ("\<","\!")
+      | Decrescendo -> ("\>","\!");;
+let artic_groupeToLily p = match p with
+      | Dummy_ag -> ("","")
+      | Lie -> ("\(","\)");;
+let rec hauteurToLily h =
+ match h with
+   |1 -> "'"
+   |_ -> "'"^(hauteurToLily (h-1));;
+
+
+
+let noteToval n =
+match n with
+  | C-> 0 
+  | Cd -> 1 | Db -> 1 
+  | D-> 2 
+  | Dd-> 3 | Eb-> 3 
+  | E-> 4 
+  | F-> 5 
+  | Fd-> 6 | Gb-> 6 
+  | G-> 7 
+  | Gd-> 8 | Ab-> 8 
+  | A-> 9
+  | Ad-> 10 |Bb->10 
+  | B-> 11
+;;
+
+let valTonote v b =
+  if b then   match v with
+      | 0-> C 
+      | 1 -> Cd
+      | 2-> D 
+      | 3-> Dd 
+      | 4-> E 
+      | 5-> F 
+      | 6-> Fd 
+      | 7-> G 
+      | 8-> Gd 
+      | 9-> A
+      | 10-> Ad
+      | 11-> B
+  else
+    match v with
+      | 0 -> C
+      | 1 -> Db 
+      | 2-> D 
+      | 3-> Eb 
+      | 4-> E 
+      | 5-> F 
+      | 6-> Gb 
+      | 7-> G 
+      | 8-> Ab 
+      | 9-> A
+      | 10->Bb
+      | 11-> B
+;;
+
+
+class gamme fonda trois cinq sept neuf onze treize= 
+object
+  val i = fonda
+  method i = fonda
+  val iii = trois
+  method iii = trois
+  val v = cinq
+  method v = cinq
+  val vii = sept
+  method vii = sept
+  val ix = neuf
+  method ix = neuf
+  val xi = onze
+  method xi = onze
+  val xiii = treize
+  method xiii = treize
+  method signature = 
+   [iii,v,vii,ix,xi,xiii]
+  method norm =
+   abs(iii)+ abs(v) + abs(vii) + abs(ix) + abs(xi) + abs(xiii)
+  method expand =
+    let vF = noteToval fonda in
+    let vII = vF + 2
+    and vIII = vF + 4 + iii 
+    and vIV = vF + 5 + xi
+    and vV = vF + 7 + v 
+    and vVI = vF + 9 + xiii
+    and vVII = vF + 11  + vii
+    and vVIII = vF
+    and vIX = vF + 2 + ix
+    and vX = vF + 4 + iii 
+    and vXI = vF + 5 + xi
+    and vXII = vF + 7 + v
+    and vXIII = vF + 9 + xiii 
+    and vXIV = vF + 11 + vii in
+      match fonda with
+	 |Cd | D | E | G |A |B ->
+	    List.map (function x ->  valTonote (x mod 12) true) 
+	      [vF;vII;vIII;vIV;vV;vVI;vVII;vVIII;vIX;vX;vXI;vXII;vXIII;vXIV]
+	 |C |Db | Dd | Eb | F |Fd | Gb |Gd | Ab |Ad | Bb  ->
+	    List.map (function x ->  valTonote (x mod 12) false) 
+	      [vF;vII;vIII;vIV;vV;vVI;vVII;vVIII;vIX;vX;vXI;vXII;vXIII;vXIV]
+
+end;;
+
+
+let valeurToLily v (gamme:gamme) =
+  let n = List.nth (gamme#expand) (v-1) in
+    match n with
+      | C-> "c"
+      | Cd -> "cis" | Db -> "des"
+      | D-> "d" 
+      | Dd-> "dis" | Eb-> "ees"
+      | E-> "e" 
+      | F-> "f" 
+      | Fd-> "fis" | Gb-> "ges"
+      | G-> "g" 
+      | Gd-> "gis" | Ab-> "aes"
+      | A-> "a"
+      | Ad-> "ais" |Bb-> "bes"
+      | B-> "b"
+;;
+*)
+
+let string_to_file file s  =
+  let channel = (open_out file) in
+    output_string channel s;
+    close_out channel;
+;;
+
+

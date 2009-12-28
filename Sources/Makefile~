@@ -1,0 +1,47 @@
+CC = ocamlopt
+CMA = unix.cmxa str.cmxa graphics.cmxa
+TARGETS = Prog
+
+NameG = projet
+
+all : $(TARGETS)
+
+#$ Création de l'executable du Projet
+Prog : projet.cmx 
+	$(CC) -o $(NameG) $(CMA) projet.cmx
+
+projet.cmx : projet.ml
+	$(CC) -o $@ $(CMA) -c projet.ml
+
+
+
+#$ ***************************************************************** $#
+clean:
+	@echo
+	@echo "*******************************"
+	@echo "**    Début du nettoyage     **"
+	@echo "*******************************"
+	@echo
+	rm -f *~
+        rm -f *.cmx
+
+	@echo
+	@echo "*******************************"
+	@echo "**     Fin du Nettoyage      **"
+	@echo "*******************************"
+	@echo
+clean_all: 
+	@echo
+	@echo "*******************************"
+	@echo "**    Début du nettoyage     **"
+	@echo "*******************************"
+	@echo
+	rm -f *~
+	rm -f $(NameG)
+        rm -f *.cmx
+
+	@echo
+	@echo "*******************************"
+	@echo "**     Fin du Nettoyage      **"
+	@echo "*******************************"
+	@echo

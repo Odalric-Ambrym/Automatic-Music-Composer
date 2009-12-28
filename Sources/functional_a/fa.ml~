@@ -1,0 +1,77 @@
+(* Functional Abstraction *)
+open Ma;;
+open Sa;;
+
+(* Notes :*)
+(* duree modifiers *)
+(* valeur modifiers *)
+(* artic modifiers *)
+(* nuance modifiers *)
+
+(* Groupes :*)
+(* Notes modifiers *)
+
+(*
+let aux   notes = 
+   List.fold_left (+.) 0.
+   (List.map (function (x:abstract_note) -> x#duree_reelle) notes);;
+
+let aux2 l s =
+  match (s mod 2,l) with
+    | _,[] -> []
+    | 0,d::q -> 8 8 -> 2/3 4 8
+
+let ternaire ln =
+  let ld = List.map (function (x:abstract_note) -> x#duree) notes in
+  let s = ref 0 in
+    for i=1 to length ld do
+      if (s mod 2 = 0) then
+	
+    done
+
+;;*)
+
+(*   note nota altezza durata accento intensita = *)
+
+let notaMtonM m = 
+  fun (n:Sa.note) -> 
+    new Sa.note (m n#nota) (n#altezza) (n#durata) (n#accento) (n#intensita);;
+let altezzaMtonM m = 
+  fun (n:Sa.note) -> 
+    new Sa.note (n#nota) (m n#altezza) (n#durata) (n#accento) (n#intensita);;
+let durataMtonM m = 
+  fun (n:Sa.note) -> 
+    new Sa.note (n#nota) (n#altezza) (m n#durata) (n#accento) (n#intensita);;
+let accentoMtonM m = 
+  fun (n:Sa.note) -> 
+    new Sa.note (n#nota) (n#altezza) (n#durata) (m n#accento) (n#intensita);;
+let intensitaMtonM m = 
+  fun (n:Sa.note) -> 
+    new Sa.note  (n#nota) (n#altezza) (n#durata) (n#accento) (m n#intensita);;
+(* Note modifiers *)
+let note_listMTogrM m = 
+  fun (g:Sa.group) -> 
+    new Sa.group (m g#note_list) (g#scala) (g#dinamica) (g#espresione) (g#ritmo);;
+(* Scala modifiers *)
+let scalaMTogrM m = 
+  fun (g:Sa.group) -> 
+    new Sa.group (g#note_list) (m g#scala) (g#dinamica) (g#espresione) (g#ritmo);;
+(* Dinamica modifiers *)
+let dinamicaMTogrM m = 
+  fun (g:Sa.group) -> 
+    new Sa.group (g#note_list) (g#scala) (m g#dinamica) (g#espresione) (g#ritmo);;
+(* Espresione modifiers *)
+let espresioneMTogrM m = 
+fun (g:Sa.group) -> 
+ new Sa.group (g#note_list) (g#scala) (g#dinamica) (m g#espresione) (g#ritmo);;
+(* Dinamica modifiers *)
+let ritmoMTogrM m = 
+fun (g:Sa.group) -> 
+ new Sa.group (g#note_list) (g#scala) (g#dinamica) (g#espresione) (m g#ritmo);;
+
+(* Phrases : *)
+let grMTopM m = 
+fun (p:phrase) -> 
+  new phrase (List.map m (p#group_list));;
+
+

@@ -1,0 +1,12 @@
+
+%get the version from the server:
+git pull origin master
+
+%send to the server:
+git push
+
+%take into account local change:
+git commit -a -m 'blabla'
+
+%info:
+git status

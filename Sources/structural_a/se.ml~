@@ -1,0 +1,8 @@
+(* Structural elements *)
+open Ma;;
+open Sa;;
+(* i=degre dans la gamme, 1 = duree lilypond *)
+(*let i1 = new abstract_note 1 1 1 Dummy_as Dummy_ns;;
+let ii1 = new abstract_note 1 1 2 Dummy_as Dummy_ns;;
+*)
+let n = new note C 2 Croche Tenuto Piano;;
