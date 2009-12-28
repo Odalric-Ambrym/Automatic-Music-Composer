@@ -1,30 +1,34 @@
 (* Musical Abstraction *)
 
 (*Dod = Do diesis, Reb = Re bemolle*)
+(* Todo : traduire C en Do etc *)
+(* Todo ! completer les types *)
 type nota = C | Cd | Db | D | Dd | Eb | E | F | Fd | Gb | G | Gd | Ab |A |Ad |Bb |B;; 
 type accento = Dummy_accento | Tenuto| Corona;;
-type durata = Ronde | Blanche | Noire | Croche | DoubleCroche | TripleCroche;;
+type durata = Semibreve | Minima | Semiminima | Croma | Semicroma | Biscroma ;;
+(* Semibreve = Ronde, Biscroma = Triple croche *)
 type intensita = Dummy_intensita |  Piano |MezzoForte | Forte ;;
 type altezza = int;;
-type timbro = Dummy_timbro;; (* ??? *)
+type timbro = Dummy_timbro;; (* violin, piano... *)
 type dinamica= Dummy_dinamica | Crescendo | Decrescendo ;;
 type espresione = Dummy_espresione | Legato | Marcato;;
 (* Question : nuances
 - Piano ? local/global
 - sfz : local
 - crescendo : global *)
-type ritmo = Binare | Ternare;;
+type ritmo = Binario | Ternario;;
 
 (* *********** *)
 let durataToLily d = match d with
-  |Ronde -> "1"
-  |Blanche -> "2"
-  |Noire -> "4"
-  |Croche -> "8"
-  |DoubleCroche -> "16"
-  |TripleCroche -> "32";;
+  |Semibreve -> "1"
+  |Minima -> "2"
+  |Semiminima -> "4"
+  |Croma -> "8"
+  |Semicroma -> "16"
+  |Biscroma -> "32";;
 let rec altezzaToLily h =
  match h with
+   |0 -> ""
    |1 -> "'"
    |_ -> "'"^(altezzaToLily (h-1));;
 let intensitaToLily n = match n with
@@ -62,12 +66,12 @@ let dinamicaToLily  d = match d with
 
 (* *********** *)
 let durataToValue d = match d with
-  |Ronde -> 1
-  |Blanche -> 2
-  |Noire -> 4
-  |Croche -> 8
-  |DoubleCroche -> 16
-  |TripleCroche -> 32;;
+  |Semibreve -> 1
+  |Minima -> 2
+  |Semiminima -> 4
+  |Croma -> 8
+  |Semicroma -> 16
+  |Biscroma -> 32;;
 
 let notaToValue n =
 match n with
@@ -317,10 +321,5 @@ let valeurToLily v (gamme:gamme) =
 ;;
 *)
 
-let string_to_file file s  =
-  let channel = (open_out file) in
-    output_string channel s;
-    close_out channel;
-;;
 
 

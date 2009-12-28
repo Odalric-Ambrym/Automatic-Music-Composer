@@ -65,7 +65,7 @@ object
     let s_dinamica = dinamicaToLily dinamica in
     let s_note = (List.hd note_list)#engraveToLily in
     let s_notes = List.fold_left (^) "" (List.map (function (x:note)-> x#engraveToLily) (List.tl note_list)) in
-      if (ritmo = Ternare) then
+      if (ritmo = Ternario) then
 	"\\times 2/3 {"^s_note^(fst s_espresione)^(fst s_dinamica)^s_notes^(snd s_dinamica)^(snd s_espresione)^" } "
       else
 	s_note^(fst s_espresione)^(fst s_dinamica)^s_notes^(snd s_dinamica)^(snd s_espresione)^" "

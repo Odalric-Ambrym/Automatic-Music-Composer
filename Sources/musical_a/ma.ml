@@ -73,6 +73,9 @@ let durataToValue d = match d with
   |Semicroma -> 16
   |Biscroma -> 32;;
 
+let durataToTimeLength d =
+    1./. (float_of_int (durataToValue d));;
+
 let notaToValue n =
 match n with
   | C-> 0 

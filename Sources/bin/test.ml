@@ -75,6 +75,19 @@ let part1 = [p1;p2;p1;p3];;
 (*    J'ai du bon tabac    *)
 (* ----------------------- *)
 
+let rec print_signature s =
+  match s with
+    |[] -> print_newline();
+    |x::q -> 
+       begin
+	 print_string "(";print_float (fst x);
+	 print_string",";print_int (snd x);
+	 print_string ");";print_signature q;
+       end;;
+
+print_signature (p1#signature);;
+
+
 (* Todo : Gravure de Partition *)
 let lilypart1 = "{"^(List.fold_left (fun s -> fun (x:phrase) -> s^x#engraveToLily^" ") "" part1)^"}";;
 string_to_file "music1.ly" lilypart1;;

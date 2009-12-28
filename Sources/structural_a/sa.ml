@@ -54,12 +54,22 @@ object
   val ritmo = ritmo
   method ritmo = ritmo
 (* Features *)
+(* i.e. perte d'information *)
   method numberOfNotes = 
     List.length note_list
+  method timeLength =
+    match ritmo with
+       |Binario ->
+	  (List.fold_left (+.) 0.
+	     (List.map (function (n:note) -> durataToTimeLength (n#durata)) note_list))
+       |Ternario ->
+	  (List.fold_left (+.) 0.
+	     (List.map (function (n:note) -> durataToTimeLength (n#durata)) note_list))*.(2./.3.)
+(* Converter *)
+(* pas de perte d'information *)
   method note_listToValueScala = 
     List.map (fun x -> notaToValueScala (x#nota) scala) note_list
-
-(* Converter *)
+  method note_listToInterval_list =  ()
   method engraveToLily =
     let s_espresione = espresioneToLily espresione in
     let s_dinamica = dinamicaToLily dinamica in
@@ -80,11 +90,22 @@ object
   val group_list = group_list
   method group_list = group_list
   method signature =
-    List.map (function (x:group) -> (x#numberOfNotes)) group_list
-      (* Duree, Nombre de notes *)
+    List.map (function (x:group) -> (x#timeLength,x#numberOfNotes)) group_list
   method engraveToLily =
     List.fold_left (^) "" (List.map (function (x:group) -> x#engraveToLily) group_list)
 end;;
+
+let rec print_signature s =
+  match s with
+    |[] -> print_newline();
+    |x::q -> 
+       begin
+	 print_string "(";print_float (fst x);
+	 print_string",";print_int (snd x);
+	 print_string ");";print_signature q;
+       end;;
+
+
 
 (*
 class abstract_note duree tpsfort valeur artic nuance= 
