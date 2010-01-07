@@ -17,12 +17,21 @@ object
 
 (* Converter *)
   method engraveToLily = 
-    let s_durata = Ma.durataToLily durata in 
-    let s_altezza = Ma.altezzaToLily altezza in
-    let s_intensita =  Ma.intensitaToLily intensita in
-    let s_accento =  Ma.accentoToLily accento in
-    let s_nota = Ma.notaToLily nota in
-      s_nota^s_altezza^s_durata^s_accento^s_intensita^" "
+    match nota with
+      |S -> begin
+	   let s_durata = Ma.durataToLily durata in 
+	   let s_intensita =  Ma.intensitaToLily intensita in
+	   let s_nota = Ma.notaToLily nota in
+	     s_nota^s_durata^s_intensita^" "
+	 end
+      |_ -> begin
+	   let s_durata = Ma.durataToLily durata in 
+	   let s_altezza = Ma.altezzaToLily altezza in
+	   let s_intensita =  Ma.intensitaToLily intensita in
+	   let s_accento =  Ma.accentoToLily accento in
+	   let s_nota = Ma.notaToLily nota in
+	     s_nota^s_altezza^s_durata^s_accento^s_intensita^" "
+	 end
 end;;
 
 let valueScala (n:note) (s:scala) = notaToValueScala (n#nota) s;;
@@ -79,8 +88,11 @@ object
 	"\\times 2/3 {"^s_note^(fst s_espresione)^(fst s_dinamica)^s_notes^(snd s_dinamica)^(snd s_espresione)^" } "
       else
 	s_note^(fst s_espresione)^(fst s_dinamica)^s_notes^(snd s_dinamica)^(snd s_espresione)^" "
-
 end;;
+
+(*class group note_list scala ritmo *)
+(*class phrase group_list espresione dinamica_stream*)
+(* ex: dinamica_stream = [(Piano,3);(Crescendo,2);(Forte,1)] ou mieux : lie a la note*)
 
 (* Faut-il voir une mesure comme une structure, ou plutôt comme une fonction trasformant une liste de notes en  liste de temps forts ? et voir du coup une phrase comme structure *)
 (* function mesure group_list param = ... -> liste de (notes,temps forts) (complétée par des blancs si trop court) *)

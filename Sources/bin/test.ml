@@ -14,11 +14,11 @@ let string_to_file file s  =
 
 (* ----------------------- *)
 (*    J'ai du bon tabac    *)
-let n1 = new note C 1 Croma Dummy_accento Dummy_intensita;;
-let n2 = new note D 1 Croma Dummy_accento Dummy_intensita;;
-let n3 = new note E 1 Croma Dummy_accento Dummy_intensita;;
-let n4 = new note C 1 Croma Dummy_accento Dummy_intensita;;
-let n5 = new note D 1 Semiminima Dummy_accento Dummy_intensita;;
+let n1 = new note Do 1 Croma Dummy_accento Dummy_intensita;;
+let n2 = new note Re 1 Croma Dummy_accento Dummy_intensita;;
+let n3 = new note Mi 1 Croma Dummy_accento Dummy_intensita;;
+let n4 = new note S 1 Croma Dummy_accento Dummy_intensita;;
+let n5 = new note Re 1 Semiminima Dummy_accento Dummy_intensita;;
 
 let g1 = new group ([n1;n2]) cMajeur Crescendo Dummy_espresione Binario;;
 let g2 = new group ([n3;n4])cMajeur Decrescendo Dummy_espresione Binario;;
@@ -75,15 +75,6 @@ let part1 = [p1;p2;p1;p3];;
 (*    J'ai du bon tabac    *)
 (* ----------------------- *)
 
-let rec print_signature s =
-  match s with
-    |[] -> print_newline();
-    |x::q -> 
-       begin
-	 print_string "(";print_float (fst x);
-	 print_string",";print_int (snd x);
-	 print_string ");";print_signature q;
-       end;;
 
 print_signature (p1#signature);;
 

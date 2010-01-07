@@ -3,7 +3,7 @@
 (*Dod = Do diesis, Reb = Re bemolle*)
 (* Todo : traduire C en Do etc *)
 (* Todo ! completer les types *)
-type nota = C | Cd | Db | D | Dd | Eb | E | F | Fd | Gb | G | Gd | Ab |A |Ad |Bb |B;; 
+type nota = S | C | Cd | Db | D | Dd | Eb | E | F | Fd | Gb | G | Gd | Ab |A |Ad |Bb |B;; 
 type accento = Dummy_accento | Tenuto| Corona;;
 type durata = Semibreve | Minima | Semiminima | Croma | Semicroma | Biscroma ;;
 (* Semibreve = Ronde, Biscroma = Triple croche *)
@@ -52,7 +52,8 @@ let notaToLily n = match n with
   | Gd-> "gis" | Ab-> "aes"
   | A-> "a"
   | Ad-> "ais" |Bb-> "bes"
-  | B-> "b";;
+  | B-> "b"
+  | S -> "r";;
 
 let espresioneToLily  e = match e with
   | Legato -> ("\\(","\\)")
@@ -72,6 +73,9 @@ let durataToValue d = match d with
   |Croma -> 8
   |Semicroma -> 16
   |Biscroma -> 32;;
+
+let durataToTimeLength d =
+    1./. (float_of_int (durataToValue d));;
 
 let notaToValue n =
 match n with

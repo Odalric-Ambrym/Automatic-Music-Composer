@@ -2,11 +2,11 @@
 open Ma;;
 
 (* Gammes *)
-let cMajeur = new gamme C 0 0 0 0 0 0;;
-let dMajeur  = new gamme D 0 0 0 0 0 0;;
-let dDorien  = new gamme D (-1) 0 (-1) 0 0 0;;
-let cDorien  = new gamme C (-1) 0 (-1) 0 0 0;;
-let fMajeur  = new gamme F 0 0 0 0 0 0;;
+let cMajeur = new scala C 0 0 0 0 0 0;;
+let dMajeur  = new scala D 0 0 0 0 0 0;;
+let dDorien  = new scala D (-1) 0 (-1) 0 0 0;;
+let cDorien  = new scala C (-1) 0 (-1) 0 0 0;;
+let fMajeur  = new scala F 0 0 0 0 0 0;;
 
 
 cMajeur#signature;;

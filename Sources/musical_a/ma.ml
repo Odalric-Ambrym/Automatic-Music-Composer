@@ -3,7 +3,7 @@
 (*Dod = Do diesis, Reb = Re bemolle*)
 (* Todo : traduire C en Do etc *)
 (* Todo ! completer les types *)
-type nota = C | Cd | Db | D | Dd | Eb | E | F | Fd | Gb | G | Gd | Ab |A |Ad |Bb |B;; 
+type nota = S | Do | Dod | Reb | Re | Red | Mib | Mi | Fa | Fad | Solb | Sol | Sold | Lab |La |Lad |Sib |Si;; 
 type accento = Dummy_accento | Tenuto| Corona;;
 type durata = Semibreve | Minima | Semiminima | Croma | Semicroma | Biscroma ;;
 (* Semibreve = Ronde, Biscroma = Triple croche *)
@@ -41,18 +41,19 @@ let accentoToLily p = match p with
   | Tenuto -> "--"
   | _ -> "";;
 let notaToLily n = match n with
-  | C-> "c"
-  | Cd -> "cis" | Db -> "des"
-  | D-> "d" 
-  | Dd-> "dis" | Eb-> "ees"
-  | E-> "e" 
-  | F-> "f" 
-  | Fd-> "fis" | Gb-> "ges"
-  | G-> "g" 
-  | Gd-> "gis" | Ab-> "aes"
-  | A-> "a"
-  | Ad-> "ais" |Bb-> "bes"
-  | B-> "b";;
+  | Do-> "c"
+  | Dod -> "cis" | Reb -> "des"
+  | Re-> "d" 
+  | Red-> "dis" | Mib-> "ees"
+  | Mi-> "e" 
+  | Fa-> "f" 
+  | Fad-> "fis" | Solb-> "ges"
+  | Sol-> "g" 
+  | Sold-> "gis" | Lab-> "aes"
+  | La-> "a"
+  | Lad-> "ais" |Sib-> "bes"
+  | Si-> "b"
+  | S -> "r";;
 
 let espresioneToLily  e = match e with
   | Legato -> ("\\(","\\)")
@@ -78,48 +79,51 @@ let durataToTimeLength d =
 
 let notaToValue n =
 match n with
-  | C-> 0 
-  | Cd -> 1 | Db -> 1 
-  | D-> 2 
-  | Dd-> 3 | Eb-> 3 
-  | E-> 4 
-  | F-> 5 
-  | Fd-> 6 | Gb-> 6 
-  | G-> 7 
-  | Gd-> 8 | Ab-> 8 
-  | A-> 9
-  | Ad-> 10 |Bb->10 
-  | B-> 11
+  | Do-> 0 
+  | Dod -> 1 | Reb -> 1 
+  | Re-> 2 
+  | Red-> 3 | Mib-> 3 
+  | Mi-> 4 
+  | Fa-> 5 
+  | Fad-> 6 | Solb-> 6 
+  | Sol-> 7 
+  | Sold-> 8 | Lab-> 8 
+  | La-> 9
+  | Lad-> 10 |Sib->10 
+  | Si-> 11
+  | S -> (-1)
 ;;
 
 let valueToNota v b =
   if b then   match v with
-      | 0-> C 
-      | 1 -> Cd
-      | 2-> D 
-      | 3-> Dd 
-      | 4-> E 
-      | 5-> F 
-      | 6-> Fd 
-      | 7-> G 
-      | 8-> Gd 
-      | 9-> A
-      | 10-> Ad
-      | 11-> B
+      | 0-> Do 
+      | 1 -> Dod
+      | 2-> Re 
+      | 3-> Red 
+      | 4-> Mi 
+      | 5-> Fa 
+      | 6-> Fad 
+      | 7-> Sol 
+      | 8-> Sold 
+      | 9-> La
+      | 10-> Lad
+      | 11-> Si
+      | (-1) -> S
   else
     match v with
-      | 0 -> C
-      | 1 -> Db 
-      | 2-> D 
-      | 3-> Eb 
-      | 4-> E 
-      | 5-> F 
-      | 6-> Gb 
-      | 7-> G 
-      | 8-> Ab 
-      | 9-> A
-      | 10->Bb
-      | 11-> B
+      | 0 -> Do
+      | 1 -> Reb 
+      | 2-> Re 
+      | 3-> Mib 
+      | 4-> Mi 
+      | 5-> Fa 
+      | 6-> Solb 
+      | 7-> Sol 
+      | 8-> Lab 
+      | 9-> La
+      | 10->Sib
+      | 11-> Si
+      | (-1) -> S
 ;;
 
 (* *********** *)
@@ -160,12 +164,15 @@ object
     and vXIII = vF + 9 + xiii 
     and vXIV = vF + 11 + vii in
       match fonda with
-	 |Cd | D | E | G |A |B ->
+	 |Dod | Re | Mi | Sol |La |Si ->
 	    List.map (function x ->  valueToNota (x mod 12) true) 
 	      [vF;vII;vIII;vIV;vV;vVI;vVII;vVIII;vIX;vX;vXI;vXII;vXIII;vXIV]
-	 |C |Db | Dd | Eb | F |Fd | Gb |Gd | Ab |Ad | Bb  ->
+	 |Do |Reb | Red | Mib | Fa |Fad | Solb |Sold | Lab |Lad | Sib  ->
 	    List.map (function x ->  valueToNota (x mod 12) false) 
 	      [vF;vII;vIII;vIV;vV;vVI;vVII;vVIII;vIX;vX;vXI;vXII;vXIII;vXIV]
+	 |S -> 	    
+	    List.map (function x ->  valueToNota (x mod 12) false) 
+	      [0;vII;vIII;vIV;vV;vVI;vVII;vVIII;vIX;vX;vXI;vXII;vXIII;vXIV]
 end;;
 
 let rec search l e = 
